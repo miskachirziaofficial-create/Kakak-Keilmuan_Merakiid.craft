@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Wisuda | Kakak Keilmuan</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        /* ===== MAROON PALETTE (bouquet-inspired) ===== */
+        :root {
+            --maroon-deep:   #5c0a14;  /* dark bouquet wrap */
+            --maroon-mid:    #7d1325;  /* main maroon */
+            --maroon-rich:   #9e1a2f;  /* accent maroon */
+            --maroon-soft:   #c94e62;  /* lighter rose */
+            --blush:         #f4c5ce;  /* soft pink from flowers */
+            --cream:         #fdf4f5;  /* background base */
+            --cream-warm:    #f9eaec;  /* cards */
+            --black-wrap:    #1a1a1a;  /* black wrap paper */
+            --ribbon:        #8b0d22;  /* ribbon red */
+            --gold:          #c9a07a;  /* buket string / accent */
+            --text-dark:     #2a0509;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #3b0010 0%, #5c0a14 40%, #4a0010 70%, #2a0008 100%);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            color: #f9e8eb;
+        }
+        .font-aesthetic {
+            font-family: 'Playfair Display', serif;
+        }
+        .glass {
+            background: rgba(80, 5, 18, 0.45);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(244, 197, 206, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
+        }
+        .glow-effect {
+            box-shadow: 0 0 36px rgba(201, 78, 98, 0.25);
+        }
+        /* Floating Animation */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            animation: float 8s linear infinite;
+            bottom: -50px;
+        }
+        /* Shake Animation for Wrong PIN */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+        .shake-effect {
+            animation: shake 0.4s ease-in-out;
+        }
+        /* PIN Dots active style */
+        .pin-dot.active {
+            background-color: var(--maroon-deep);
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(158, 26, 47, 0.6);
+        }
+
+        /* CHIBI BEAR */
+        .bear-body { background: #e6ba95; box-shadow: inset -6px -6px 0px rgba(0,0,0,0.08); }
+        .bear-ear { background: #e6ba95; box-shadow: inset -2px -2px 0px rgba(0,0,0,0.08); }
+        .bear-ear-inner { background: var(--maroon-rich); }
+        .bear-muzzle { background: #fffdf0; }
+        .bear-blush { background: #f0c36d; filter: blur(1px); }
+
+        .bear-cap-top {
+            position: absolute; top: -10px; left: 50%;
+            transform: translateX(-50%);
+            width: 34px; height: 8px;
+            background: var(--maroon-deep); border-radius: 2px; z-index: 5;
+        }
+        .bear-cap-board {
+            position: absolute; top: -16px; left: 50%;
+            transform: translateX(-50%) rotate(0deg);
+            width: 48px; height: 48px;
+            background: var(--maroon-deep); border-radius: 3px; z-index: 4;
+        }
+        .bear-cap-button {
+            position: absolute; top: -7px; left: 50%;
+            transform: translateX(-50%);
+            width: 6px; height: 6px;
+            background: var(--gold); border-radius: 50%; z-index: 6;
+        }
+        .bear-cap-tassel {
+            position: absolute; top: -6px; left: calc(50% + 18px);
+            width: 2px; height: 22px;
+            background: var(--gold); z-index: 6; transform-origin: top;
+        }
+        .bear-cap-tassel::after {
+            content: ""; position: absolute; bottom: -4px; left: -3px;
+            width: 8px; height: 8px; background: var(--gold); border-radius: 50%;
+        }
+        
+        @keyframes chibiKiss {
+            0%, 100% { transform: scale(1); }
+            40% { transform: scale(1.03) translateY(-4px); }
+            50% { transform: rotate(-3deg); }
+            55% { transform: rotate(3deg); }
+        }
+        .animate-chibi { animation: chibiKiss 2.5s infinite ease-in-out; }
+
+        @keyframes handBlow {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            35% { transform: translate(-2px, -6px) rotate(-15deg); }
+            45% { transform: translate(8px, 4px) rotate(20deg); }
+        }
+        .animate-bear-hand { animation: handBlow 2.5s infinite ease-in-out; transform-origin: bottom left; }
+
+        @keyframes capPop {
+            0% { transform: translate(0, 0) scale(0.5) rotate(0deg); opacity: 0; }
+            15% { opacity: 1; }
+            100% { transform: translate(60px, -50px) scale(1.3) rotate(25deg); opacity: 0; }
+        }
+        .kiss-heart-1 { animation: capPop 2.5s infinite linear; animation-delay: 1.1s; }
+        .kiss-heart-2 { animation: capPop 2.5s infinite linear; animation-delay: 1.3s; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(158, 26, 47, 0.45); border-radius: 10px; }
+
+        /* ===== SCRAPBOOK ENVELOPE ===== */
+        .envelope-wrapper {
+            cursor: pointer; display: flex; flex-direction: column;
+            align-items: center; gap: 14px; width: 170px;
+        }
+        .envelope-box { position: relative; width: 150px; height: 120px; }
+
+        .env-body {
+            position: absolute; bottom: 0; width: 150px; height: 100px;
+            background: var(--maroon-mid); border-radius: 6px; overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15), inset 0 -8px 12px rgba(0,0,0,0.07);
+            transition: all 0.35s ease;
+        }
+        .envelope-wrapper:hover .env-body { transform: translateY(-3px); }
+
+        .env-bottom-left {
+            position: absolute; bottom: 0; left: 0; width: 0; height: 0;
+            border-style: solid; border-width: 0 0 60px 75px;
+            border-color: transparent transparent var(--maroon-deep) transparent;
+        }
+        .env-bottom-right {
+            position: absolute; bottom: 0; right: 0; width: 0; height: 0;
+            border-style: solid; border-width: 0 75px 60px 0;
+            border-color: transparent var(--maroon-deep) transparent transparent;
+        }
+        .env-flap {
+            position: absolute; top: 0; left: 0; width: 0; height: 0;
+            border-style: solid; border-width: 55px 75px 0 75px;
+            border-color: var(--maroon-rich) transparent transparent transparent;
+            transform-origin: top center; transition: transform 0.6s ease; z-index: 4;
+        }
+        .env-flap.opened { transform: rotateX(180deg); }
+
+        .env-letter {
+            position: absolute; left: 50%; bottom: 10px;
+            transform: translateX(-50%);
+            width: 130px; height: 85px;
+            background: var(--cream-warm);
+            border: 1px solid rgba(158, 26, 47, 0.2);
+            border-radius: 6px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+            z-index: 2; opacity: 0;
+            transition: all 0.65s cubic-bezier(.34,1.56,.64,1);
+            display: flex; justify-content: center; align-items: center; padding: 12px;
+        }
+        .env-letter::before {
+            content: ""; position: absolute; inset: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 22px, rgba(0,0,0,0.03) 23px);
+            pointer-events: none;
+        }
+        .env-letter.slide-up { transform: translateX(-50%) translateY(-45px); opacity: 1; }
+        .letter-inner { text-align: center; }
+        .letter-heart { font-size: 18px; margin-bottom: 4px; }
+        .letter-text { font-size: 10px; color: var(--maroon-deep); line-height: 1.6; font-style: italic; }
+        .env-icon {
+            position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%);
+            color: var(--blush); font-size: 22px; z-index: 3; transition: opacity 0.3s;
+        }
+        .env-icon.hide { opacity: 0; }
+        .env-label { font-size: 12px; font-weight: 600; color: #f4c5ce; letter-spacing: 0.5px; }
+
+        /* ===== BUTTON STYLES ===== */
+        .btn-maroon {
+            background: var(--maroon-mid);
+            color: white;
+        }
+        .btn-maroon:hover { background: var(--maroon-rich); }
+
+        /* PIN Button style */
+        .pin-btn {
+            background: rgba(80, 5, 18, 0.5);
+            border: 1px solid rgba(244, 197, 206, 0.2);
+            color: #f9e8eb;
+        }
+        .pin-btn:hover { background: rgba(158, 26, 47, 0.6); }
+    </style>
+</head>
+<body class="text-gray-800 antialiased min-h-screen flex flex-col justify-between">
+
+    <div id="floatingControls" class="hidden fixed top-5 right-5 z-50 flex flex-col gap-3">
+        <button id="musicBtn" class="glass w-12 h-12 rounded-full flex items-center justify-center hover:scale-110 transition shadow-lg cursor-pointer" style="color: var(--maroon-mid)">
+            <i id="musicIcon" class="fas fa-music"></i>
+        </button>
+    </div>
+
+    <audio id="bgMusic" loop src="music.mp3" preload="auto"></audio>
+
+    <!-- PIN SCREEN -->
+    <section id="passwordScreen" class="fixed inset-0 z-50 flex items-center justify-center px-4" style="background: linear-gradient(135deg, #3b0010 0%, #5c0a14 50%, #2a0008 100%)">
+        <div id="passwordBox" class="glass p-6 md:p-8 rounded-3xl max-w-sm w-full text-center transition-all duration-300 shadow-2xl">
+            <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3 text-xl shadow-inner" style="background: rgba(201, 78, 98, 0.2); color: #f4c5ce">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h2 class="text-lg font-bold mb-1" style="color: #f9e8eb">Masukkan 6 Digit Kode Spesial</h2>
+            <p class="text-xs mb-5" style="color: rgba(249,232,235,0.6)">clue: tanggal wisudamu (DD-MM-YY).</p>
+            
+            <div class="flex gap-3 justify-center mb-6">
+                <div class="pin-dot w-3.5 h-3.5 rounded-full border transition-all duration-200 shadow-inner" style="background: white; border-color: rgba(201, 78, 98, 0.4)"></div>
+                <div class="pin-dot w-3.5 h-3.5 rounded-full border transition-all duration-200 shadow-inner" style="background: white; border-color: rgba(201, 78, 98, 0.4)"></div>
+                <div class="pin-dot w-3.5 h-3.5 rounded-full border transition-all duration-200 shadow-inner" style="background: white; border-color: rgba(201, 78, 98, 0.4)"></div>
+                <div class="pin-dot w-3.5 h-3.5 rounded-full border transition-all duration-200 shadow-inner" style="background: white; border-color: rgba(201, 78, 98, 0.4)"></div>
+                <div class="pin-dot w-3.5 h-3.5 rounded-full border transition-all duration-200 shadow-inner" style="background: white; border-color: rgba(201, 78, 98, 0.4)"></div>
+                <div class="pin-dot w-3.5 h-3.5 rounded-full border transition-all duration-200 shadow-inner" style="background: white; border-color: rgba(201, 78, 98, 0.4)"></div>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-3 max-w-[280px] mx-auto mb-4">
+                <button onclick="pressKey('1')" class="pin-btn active:scale-90 font-semibold text-lg py-3 rounded-2xl shadow-sm transition cursor-pointer">1</button>
+                <button onclick="pressKey('2')" class="pin-btn active:scale-90 font-semibold text-lg py-3 rounded-2xl shadow-sm transition cursor-pointer">2</button>
+                <button onclick="pressKey('3')" class="pin-btn active:scale-90 font-semibold text-lg py-3 rounded-2xl shadow-sm transition cursor-pointer">3</button>
+                <button onclick="pressKey('4')" class="pin-btn active:scale-90 font-semibold text-lg py-3 rounded-2xl shadow-sm transition cursor-pointer">4</button>
+                <button onclick="pressKey('5')" class="pin-btn active:scale-90 font-semibold text-lg py-3 rounded-2xl shadow-sm transition cursor-pointer">5</button>
+                <button onclick="pressKey('6')" class="pin-btn active:scale-90 font-semibold text-lg py-3 rounded-2xl shadow-sm transition cursor-pointer">6</button>
+                <button onclick="pressKey('7')" class="pin-btn active:scale-90 font-semibold text-lg py-3 rounded-2xl shadow-sm transition cursor-pointer">7</button>
+                <button onclick="pressKey('8')" class="pin-btn active:scale-90 font-semibold text-lg py-3 rounded-2xl shadow-sm transition cursor-pointer">8</button>
+                <button onclick="pressKey('9')" class="pin-btn active:scale-90 font-semibold text-lg py-3 rounded-2xl shadow-sm transition cursor-pointer">9</button>
+                <button onclick="clearKey()" class="active:scale-90 font-medium text-sm py-3 rounded-2xl shadow-sm transition cursor-pointer" style="background: #fce8e8; color: #b91c1c;"><i class="fas fa-trash-can"></i></button>
+                <button onclick="pressKey('0')" class="pin-btn active:scale-90 font-semibold text-lg py-3 rounded-2xl shadow-sm transition cursor-pointer">0</button>
+                <button onclick="deleteKey()" class="active:scale-90 font-medium text-sm py-3 rounded-2xl shadow-sm transition cursor-pointer" style="background: rgba(201,78,98,0.1); color: var(--maroon-mid)"><i class="fas fa-backspace"></i></button>
+            </div>
+            
+            <p id="errorMsg" class="text-xs font-medium h-4 opacity-0 transition-opacity mb-2" style="color: #b91c1c">Kode PIN salah! Coba ingat-ingat lagi yuk 🥺</p>
+        </div>
+    </section>
+
+    <!-- LANDING -->
+    <section id="landing-sec" class="hidden min-h-screen flex flex-col items-center justify-center relative px-4 text-center overflow-hidden">
+        <div class="glass p-8 md:p-12 rounded-3xl max-w-3xl w-full transform transition duration-1000 scale-100 glow-effect relative flex flex-col items-center">
+            
+            <div class="absolute top-6 left-1/2 transform -translate-x-1/2 w-full text-center pointer-events-none z-10">
+                <span class="text-[10px] md:text-xs uppercase tracking-widest font-bold px-4 py-1.5 rounded-full inline-block shadow-xs border" style="color: #f4c5ce; background: rgba(158,26,47,0.4); border-color: rgba(244,197,206,0.2)">
+                    merakiid.craft
+                </span>
+            </div>
+            
+            <div class="mt-10 w-full flex flex-col items-center">
+                <h1 class="font-bold mb-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-2" style="color: #f9e8eb">
+                    <span class="text-4xl sm:text-5xl md:text-6xl tracking-tight">Selamat Wisuda,</span> 
+                    <span class="font-aesthetic text-4xl sm:text-5xl md:text-5xl" style="color: #f4c5ce" id="receiverName">Kakak Keilmuan</span>
+                    <i class="fas fa-graduation-cap text-2xl sm:text-3xl md:text-3xl animate-pulse ml-1" style="color: var(--maroon-soft)"></i>
+                </h1>
+                
+                <p class="text-sm my-6 max-w-md mx-auto leading-relaxed" style="color: rgba(249,232,235,0.7)">Ini persembahan kecil untuk merayakan pencapaian besar dan perjuangan panjangmu.</p>
+                
+                <div id="envelope" class="border-2 border-dashed rounded-2xl p-6 my-4 cursor-pointer hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col items-center group w-full max-w-md" style="background: rgba(80,5,18,0.4); border-color: rgba(244,197,206,0.3)">
+                    <i class="fas fa-scroll text-5xl group-hover:scale-110 transition duration-300" style="color: #f4c5ce"></i>
+                    <span class="text-sm font-medium mt-4 animate-pulse" style="color: rgba(249,232,235,0.8)">Ada kado spesial buat wisudamu</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LETTER MODAL -->
+    <div id="letterModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4 transition-opacity duration-300">
+        <div class="p-6 md:p-8 rounded-2xl max-w-lg w-full shadow-2xl border relative transform transition-transform duration-300 scale-95 flex flex-col justify-between min-h-[350px]" style="background: #2a0008; border-color: rgba(244,197,206,0.2)">
+            <div class="absolute -top-4 -left-3 text-4xl transform -rotate-12" style="color: rgba(244,197,206,0.3)"><i class="fas fa-quote-left"></i></div>
+            
+            <div class="flex-1 pt-4">
+                <h3 class="font-aesthetic text-3xl mb-4 border-b border-dashed pb-2" style="color: #f4c5ce; border-color: rgba(244,197,206,0.2)">Dear Kakak Keilmuan... 🎓</h3>
+                <p class="text-sm md:text-base leading-relaxed italic" style="color: rgba(249,232,235,0.8)">
+                    "Hai kak! Selamat ya! Terima kasih karena sudah berjuang sejauh ini. Makasih buat semua kerja keras dan semangat yang mungkin naik turun tapi nggak pernah padam. Semoga ini bisa bikin kakak makin bangga sama diri sendiri ya! ✨"
+                </p>
+            </div>
+
+            <div class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 pt-3 border-t" style="border-color: rgba(244,197,206,0.1)">
+                <span class="font-aesthetic text-xl" style="color: #f4c5ce">— Keilmuan Angkatan 23</span>
+                <button onclick="closeLetterModal()" class="btn-maroon font-semibold text-xs px-5 py-2.5 rounded-full shadow-md transition transform active:scale-95 cursor-pointer">
+                    Mulai Rayakan ✨
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main id="mainContent" class="hidden opacity-0 transition-opacity duration-1000">
+        
+        <!-- Tanggal Wisuda -->
+        <section class="py-20 px-4 max-w-4xl mx-auto text-center">
+            <div class="glass p-8 rounded-3xl shadow-xl">
+                <h2 class="text-2xl font-bold mb-2" style="color: #f9e8eb">Hari Kelulusanmu</h2>
+                <p class="text-sm mb-6" style="color: rgba(249,232,235,0.65)">Hari penting yang akan selalu dikenang:</p>
+                <div class="max-w-md mx-auto p-6 rounded-2xl shadow-inner border" style="background: rgba(60,0,15,0.5); border-color: rgba(244,197,206,0.15)">
+                    <div class="font-aesthetic text-4xl md:text-5xl mb-2" style="color: #f4c5ce">20 Juni 2026</div>
+                    <p class="text-sm italic mt-2" style="color: rgba(249,232,235,0.55)">"Sejak hari itu, satu perjalanan besar resmi tuntas dan babak baru pun dimulai."</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Typing Letter -->
+        <section class="py-16 px-4 max-w-2xl mx-auto">
+            <div class="glass p-8 rounded-3xl shadow-xl relative min-h-[300px] flex flex-col justify-between">
+                <div class="absolute -top-4 -left-3 text-4xl transform -rotate-12" style="color: rgba(201,78,98,0.4)"><i class="fas fa-quote-left"></i></div>
+                <div class="text-lg md:text-xl leading-relaxed italic font-medium p-4" style="color: rgba(249,232,235,0.85)" id="typingLetter"></div>
+                <div class="text-right font-aesthetic text-2xl mt-4" style="color: #f4c5ce">— Untuk Kakak Keilmuankuu</div>
+            </div>
+        </section>
+
+        <!-- Gift Box -->
+        <section class="py-16 px-4 text-center max-w-xl mx-auto">
+            <div class="glass p-8 rounded-3xl shadow-xl">
+                <h2 class="text-2xl font-bold mb-2" style="color: #f9e8eb">Ketuk untuk Membuka Kejutan 🎁</h2>
+                <p class="text-xs mb-8" style="color: rgba(249,232,235,0.55)">Ada kotak kado kelulusan yang menunggu sentuhanmu!</p>
+                
+                <div id="giftBoxContainer" class="cursor-pointer inline-block transition transform hover:scale-105 duration-300">
+                    <div id="giftIcon" class="text-8xl filter drop-shadow-md animate-bounce" style="color: var(--maroon-mid)">
+                        <i class="fas fa-box"></i>
+                    </div>
+                </div>
+
+                <div id="surpriseMessage" class="hidden mt-6 p-5 border rounded-2xl flex flex-col items-center" style="background: rgba(60,0,15,0.5); border-color: rgba(244,197,206,0.18)">
+                    <p class="text-sm font-semibold mb-1" style="color: #f4c5ce">🎉 SELAMAT WISUDA KAKAK! 🎉</p>
+                    <p class="text-sm mb-5" style="color: rgba(249,232,235,0.75)">Haloo kakk ada pesan dikit nih, dengerin yaa ^^</p>
+                    
+                    <audio id="voiceNoteAudio" src="voice_note.mp3" preload="auto"></audio>
+
+                    <div class="w-full max-w-xs border rounded-2xl p-4 flex items-center gap-4 shadow-xs" style="background: rgba(80,5,18,0.5); border-color: rgba(244,197,206,0.2)">
+                        <button id="vnPlayBtn" class="w-10 h-10 text-white rounded-full flex items-center justify-center transition active:scale-95 cursor-pointer btn-maroon">
+                            <i id="vnPlayIcon" class="fas fa-play ml-0.5"></i>
+                        </button>
+                        <div class="flex-1 text-left">
+                            <p class="text-xs font-bold mb-1" style="color: #f4c5ce"><i class="fas fa-microphone mr-1" style="color: var(--maroon-soft)"></i> Pesan Suara Untukmu</p>
+                            <div class="w-full h-1.5 rounded-full overflow-hidden relative cursor-pointer" id="vnProgressBar" style="background: rgba(201,78,98,0.2)">
+                                <div id="vnProgressJuice" class="h-full w-0 transition-all duration-100 rounded-full" style="background: var(--maroon-mid)"></div>
+                            </div>
+                            <div class="flex justify-between text-[10px] text-gray-400 mt-1 font-medium">
+                                <span id="vnCurrentTime">0:00</span>
+                                <span id="vnDuration">0:00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Photo Gallery -->
+        <section class="py-16 px-4 max-w-5xl mx-auto">
+            <h2 class="text-center text-3xl font-bold mb-10" style="color: #f9e8eb">Kenangan Perjuangan Kita ✨</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-items-center">
+                <div class="bg-white p-4 pb-10 shadow-xl rounded-sm transform -rotate-3 hover:rotate-0 hover:scale-105 transition duration-300 max-w-[260px]" style="border-top: 3px solid var(--maroon-soft)">
+                    <div class="w-full h-48 bg-gray-200 overflow-hidden mb-4 rounded-sm">
+                        <img src="foto_1.jpeg" alt="Memory 1" class="w-full h-full object-cover">
+                    </div>
+                    <p class="font-aesthetic text-xl text-center text-gray-700"></p>
+                </div>
+                <div class="bg-white p-4 pb-10 shadow-xl rounded-sm transform rotate-2 hover:rotate-0 hover:scale-105 transition duration-300 max-w-[260px]" style="border-top: 3px solid var(--maroon-mid)">
+                    <div class="w-full h-48 bg-gray-200 overflow-hidden mb-4 rounded-sm">
+                        <img src="foto_2.jpeg" alt="Memory 2" class="w-full h-full object-cover">
+                    </div>
+                    <p class="font-aesthetic text-xl text-center text-gray-700"></p>
+                </div>
+                <div class="bg-white p-4 pb-10 shadow-xl rounded-sm transform -rotate-1 hover:rotate-0 hover:scale-105 transition duration-300 max-w-[260px]" style="border-top: 3px solid var(--maroon-deep)">
+                    <div class="w-full h-48 bg-gray-200 overflow-hidden mb-4 rounded-sm">
+                        <img src="foto_3.jpeg" alt="Memory 3" class="w-full h-full object-cover">
+                    </div>
+                    <p class="font-aesthetic text-xl text-center text-gray-700"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chat Flashback -->
+        <section class="py-16 px-4 max-w-xl mx-auto">
+            <div class="glass p-6 rounded-3xl shadow-xl flex flex-col h-[400px] justify-between">
+                <div class="border-b pb-3 flex items-center gap-3" style="border-color: rgba(201,78,98,0.2)">
+                    <div class="w-3 h-3 rounded-full animate-pulse" style="background: #22c55e"></div>
+                    <p class="text-xs font-semibold text-gray-600">Interactive Flashback Chat</p>
+                </div>
+                <div id="chatWindow" class="flex-1 overflow-y-auto py-4 space-y-3 pr-2 text-xs md:text-sm">
+                    <div class="p-3 rounded-2xl rounded-tl-none max-w-[80%] text-sm" style="background: rgba(158,26,47,0.45); color: #f4c5ce">
+                        Kak inget ga sii waktu demisioner duluu ada yang nangis kejer bangett? 😂
+                    </div>
+                </div>
+                <div class="pt-3 border-t flex gap-2" style="border-color: rgba(201,78,98,0.2)">
+                    <button onclick="triggerChatReply(1)" id="replyBtn1" class="glass px-3 py-2 rounded-xl text-xs font-medium transition cursor-pointer" style="color: #f4c5ce" onmouseover="this.style.background='var(--maroon-rich)'; this.style.color='white'" onmouseout="this.style.background=''; this.style.color='#f4c5ce'">Iyaaa, cengeng emang</button>
+                    <button onclick="triggerChatReply(2)" id="replyBtn2" class="glass px-3 py-2 rounded-xl text-xs font-medium transition cursor-pointer" style="color: #f4c5ce" onmouseover="this.style.background='var(--maroon-rich)'; this.style.color='white'" onmouseout="this.style.background=''; this.style.color='#f4c5ce'">Soalnya bakal kangen keilmuan</button>
+                </div>
+            </div>
+
+            <div class="text-center mt-10">
+                <button onclick="openChibiModal()" class="glass px-6 py-3 rounded-full text-xs font-bold tracking-wider hover:scale-105 transition-all duration-300 shadow-md cursor-pointer border" style="color: #f4c5ce; border-color: rgba(244,197,206,0.2)">
+                    <i class="fas fa-graduation-cap mr-2 animate-bounce"></i> Buka Kado Lucu Ini Paw! 🐾
+                </button>
+            </div>
+        </section>
+
+        <!-- Kapsul Waktu -->
+        <section class="py-16 px-4 max-w-4xl mx-auto text-center">
+            <h2 class="text-2xl font-bold mb-2" style="color: #f9e8eb">Kapsul Waktu: "Buka Saat Kamu..."</h2>
+            <p class="text-xs mb-8" style="color: rgba(249,232,235,0.55)">Ketuk amplop sesuai perasaanmu sekarang 🎓</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 justify-items-center">
+
+                <div class="envelope-wrapper" onclick="openEnvelope(this, 0)">
+                    <div class="envelope-box">
+                        <div class="env-body">
+                            <div class="env-flap" id="flap-0"></div>
+                            <div class="env-bottom-left"></div>
+                            <div class="env-bottom-right"></div>
+                            <div class="env-icon"><i class="fas fa-cloud-rain"></i></div>
+                        </div>
+                        <div class="env-letter" id="letter-0">
+                            <div class="letter-inner">
+                                <div class="letter-heart">🎓</div>
+                                <p class="letter-text" id="ltext-0"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="env-label">Cemas / Lelah</p>
+                </div>
+
+                <div class="envelope-wrapper" onclick="openEnvelope(this, 1)">
+                    <div class="envelope-box">
+                        <div class="env-body">
+                            <div class="env-flap" id="flap-1"></div>
+                            <div class="env-bottom-left"></div>
+                            <div class="env-bottom-right"></div>
+                            <div class="env-icon"><i class="fas fa-brain"></i></div>
+                        </div>
+                        <div class="env-letter" id="letter-1">
+                            <div class="letter-inner">
+                                <div class="letter-heart">🎓</div>
+                                <p class="letter-text" id="ltext-1"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="env-label">Bingung Masa Depan</p>
+                </div>
+
+                <div class="envelope-wrapper" onclick="openEnvelope(this, 2)">
+                    <div class="envelope-box">
+                        <div class="env-body">
+                            <div class="env-flap" id="flap-2"></div>
+                            <div class="env-bottom-left"></div>
+                            <div class="env-bottom-right"></div>
+                            <div class="env-icon"><i class="fas fa-sun"></i></div>
+                        </div>
+                        <div class="env-letter" id="letter-2">
+                            <div class="letter-inner">
+                                <div class="letter-heart">🎓</div>
+                                <p class="letter-text" id="ltext-2"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="env-label">Bangga & Lega</p>
+                </div>
+
+                <div class="envelope-wrapper" onclick="openEnvelope(this, 3)">
+                    <div class="envelope-box">
+                        <div class="env-body">
+                            <div class="env-flap" id="flap-3"></div>
+                            <div class="env-bottom-left"></div>
+                            <div class="env-bottom-right"></div>
+                            <div class="env-icon"><i class="fas fa-graduation-cap"></i></div>
+                        </div>
+                        <div class="env-letter" id="letter-3">
+                            <div class="letter-inner">
+                                <div class="letter-heart">🎓</div>
+                                <p class="letter-text" id="ltext-3"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="env-label">Kangen Keilmuan</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Closing -->
+        <section class="py-20 px-4 text-center">
+            <h2 class="font-aesthetic text-4xl md:text-5xl mb-4" style="color: #f4c5ce">Selamat atas kelulusanmu, sebuah awal baru menanti.</h2>
+            <p class="text-xs mb-8" style="color: rgba(249,232,235,0.55)">Terima kasih telah menjadi bagian dari cerita ini. Sampai bertemu di perjalanan hebat berikutnya.</p>
+            <button onclick="replayExperience()" class="glass px-6 py-2 rounded-full text-xs font-semibold text-gray-700 hover:bg-white transition cursor-pointer">
+                <i class="fas fa-rotate-left mr-2"></i> Putar Kembali Pengalaman
+            </button>
+        </section>
+
+    </main>
+
+    <!-- CHIBI BEAR MODAL -->
+    <div id="chibiModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white p-6 rounded-3xl max-w-xs w-full shadow-2xl border-2 relative transform transition-transform duration-300 scale-95 flex flex-col items-center text-center overflow-hidden" style="border-color: rgba(201,78,98,0.35)">
+            
+            <button onclick="closeChibiModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700 transition cursor-pointer w-7 h-7 flex items-center justify-center rounded-full bg-gray-100">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="relative border text-sm mb-6 mt-4 shadow-xs animate-pulse px-4 py-2 rounded-2xl font-bold" style="background: rgba(244,197,206,0.35); border-color: rgba(201,78,98,0.3); color: var(--maroon-deep)">
+                Selamat Wisuda Kakak! 🧸🎓
+                <div class="absolute -bottom-1.5 left-1/2 transform -translate-x-1/2 rotate-45 w-3 h-3 border-r border-b" style="background: rgba(244,197,206,0.35); border-color: rgba(201,78,98,0.3)"></div>
+            </div>
+
+            <div class="w-32 h-32 relative flex items-center justify-center mb-4 animate-chibi">
+                <i class="fas fa-graduation-cap absolute text-xl opacity-0 kiss-heart-1 z-20" style="color: var(--maroon-deep); bottom: 45px; left: 55px;"></i>
+                <i class="fas fa-graduation-cap absolute text-sm opacity-0 kiss-heart-2 z-20" style="color: var(--maroon-soft); bottom: 50px; left: 60px;"></i>
+
+                <div class="bear-ear w-8 h-8 rounded-full absolute top-2 left-3 flex items-center justify-center">
+                    <div class="bear-ear-inner w-4 h-4 rounded-full"></div>
+                </div>
+                <div class="bear-ear w-8 h-8 rounded-full absolute top-2 right-3 flex items-center justify-center">
+                    <div class="bear-ear-inner w-4 h-4 rounded-full"></div>
+                </div>
+                
+                <div class="bear-body w-24 h-24 rounded-full relative flex flex-col items-center justify-center">
+                    <div class="bear-cap-board"></div>
+                    <div class="bear-cap-top"></div>
+                    <div class="bear-cap-button"></div>
+                    <div class="bear-cap-tassel"></div>
+                    <div class="flex justify-between w-14 absolute top-9 px-1">
+                        <div class="w-2.5 h-2.5 bg-gray-800 rounded-full relative">
+                            <div class="w-0.5 h-0.5 bg-white rounded-full absolute top-0.5 left-0.5"></div>
+                        </div>
+                        <div class="w-2.5 h-2.5 bg-gray-800 rounded-full relative">
+                            <div class="w-0.5 h-0.5 bg-white rounded-full absolute top-0.5 left-0.5"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between w-20 absolute top-12">
+                        <div class="bear-blush w-3.5 h-2 rounded-full"></div>
+                        <div class="bear-blush w-3.5 h-2 rounded-full"></div>
+                    </div>
+                    <div class="bear-muzzle w-9 h-7 rounded-full absolute bottom-5 flex flex-col items-center justify-center pt-0.5">
+                        <div class="w-3 h-1.5 bg-gray-800 rounded-full mb-0.5"></div>
+                        <div class="w-4 h-2 border-b-2 border-gray-800 rounded-b-full"></div>
+                    </div>
+                    <div class="animate-bear-hand bear-body w-5 h-5 rounded-full absolute bottom-4 right-1 border flex items-center justify-center" style="border-color: rgba(158,26,47,0.15)">
+                        <span class="text-[7px]">🎉</span>
+                    </div>
+                    <div class="bear-body w-5 h-5 rounded-full absolute bottom-4 left-1"></div>
+                </div>
+            </div>
+
+            <p class="text-xs font-semibold text-gray-500 px-4 mb-2">Yeay~! Beruang chibi ini ikut merayakan hari kelulusanmu dengan penuh suka cita!</p>
+        </div>
+    </div>
+
+    <footer class="py-8 text-center border-t flex flex-col items-center gap-2 mt-auto w-full" style="border-color: rgba(244,197,206,0.12); color: rgba(249,232,235,0.5)">
+        <div class="flex items-center gap-2 font-medium">
+            <i class="fas fa-graduation-cap animate-pulse" style="color: var(--maroon-soft)"></i>
+            <span>Crafted with love for <span class="font-bold" style="color: #f4c5ce">Kakak Keilmuan</span></span>
+        </div>
+        <p class="text-[10px] opacity-70">@merakiid.craft · Keilmuan Angkatan 23</p>
+    </footer>
+
+    <script>
+        // ================= CONFIG =================
+        const CORRECT_PIN = '200526';
+        // ==========================================
+
+        let currentPin = "";
+        const bgMusic = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        const musicIcon = document.getElementById('musicIcon');
+        const envelope = document.getElementById('envelope');
+        const landingSec = document.getElementById('landing-sec');
+        const mainContent = document.getElementById('mainContent');
+        const letterModal = document.getElementById('letterModal');
+        const typingLetter = document.getElementById('typingLetter');
+        const giftBoxContainer = document.getElementById('giftBoxContainer');
+        const giftIcon = document.getElementById('giftIcon');
+        const surpriseMessage = document.getElementById('surpriseMessage');
+        const chatWindow = document.getElementById('chatWindow');
+        const chibiModal = document.getElementById('chibiModal');
+
+        const vnAudio = document.getElementById('voiceNoteAudio');
+        const vnPlayBtn = document.getElementById('vnPlayBtn');
+        const vnPlayIcon = document.getElementById('vnPlayIcon');
+        const vnProgressJuice = document.getElementById('vnProgressJuice');
+        const vnProgressBar = document.getElementById('vnProgressBar');
+        const vnCurrentTime = document.getElementById('vnCurrentTime');
+        const vnDuration = document.getElementById('vnDuration');
+
+        window.addEventListener('DOMContentLoaded', () => { playAudioSecurely(); });
+
+        function updatePinDisplay() {
+            const dots = document.querySelectorAll('.pin-dot');
+            dots.forEach((dot, index) => {
+                if (index < currentPin.length) dot.classList.add('active');
+                else dot.classList.remove('active');
+            });
+        }
+
+        function pressKey(num) {
+            if (currentPin.length < 6) {
+                currentPin += num;
+                updatePinDisplay();
+                document.getElementById('errorMsg').classList.add('opacity-0');
+                if (currentPin.length === 6) setTimeout(verifyPin, 250);
+            }
+        }
+
+        function clearKey() {
+            currentPin = "";
+            updatePinDisplay();
+            document.getElementById('errorMsg').classList.add('opacity-0');
+        }
+
+        function deleteKey() {
+            if (currentPin.length > 0) {
+                currentPin = currentPin.slice(0, -1);
+                updatePinDisplay();
+                document.getElementById('errorMsg').classList.add('opacity-0');
+            }
+        }
+
+        let isMusicPlaying = false;
+        function playAudioSecurely() {
+            bgMusic.play().then(() => {
+                isMusicPlaying = true;
+                musicIcon.className = "fas fa-pause";
+                bgMusic.volume = 0.4;
+            }).catch(() => {});
+        }
+
+        musicBtn.addEventListener('click', () => {
+            if (isMusicPlaying) { bgMusic.pause(); musicIcon.className = "fas fa-music"; }
+            else { bgMusic.play(); musicIcon.className = "fas fa-pause"; }
+            isMusicPlaying = !isMusicPlaying;
+        });
+
+        function verifyPin() {
+            const passwordBox = document.getElementById('passwordBox');
+            if (currentPin === CORRECT_PIN) {
+                playAudioSecurely();
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#7d1325', '#c94e62', '#f4c5ce', '#ffffff'] });
+                document.getElementById('passwordScreen').classList.add('hidden');
+                landingSec.classList.remove('hidden');
+                document.getElementById('floatingControls').classList.remove('hidden');
+                createParticles();
+            } else {
+                passwordBox.classList.add('shake-effect');
+                document.getElementById('errorMsg').classList.remove('opacity-0');
+                setTimeout(() => { passwordBox.classList.remove('shake-effect'); clearKey(); }, 500);
+            }
+        }
+
+        envelope.addEventListener('click', () => {
+            letterModal.classList.remove('hidden');
+            setTimeout(() => {
+                letterModal.querySelector('div').classList.remove('scale-95');
+                letterModal.querySelector('div').classList.add('scale-100');
+            }, 50);
+        });
+
+        function closeLetterModal() {
+            letterModal.querySelector('div').classList.add('scale-95');
+            letterModal.classList.add('opacity-0');
+            setTimeout(() => {
+                letterModal.classList.add('hidden');
+                landingSec.classList.add('hidden');
+                mainContent.classList.remove('hidden');
+                setTimeout(() => {
+                    mainContent.classList.remove('opacity-0');
+                    startTypingEffect();
+                }, 50);
+            }, 300);
+        }
+
+        const letterText = "Sejak kakak memulai perjalanan ini, kami tahu betapa beratnya jatuh bangun yang kakak lewati. Setiap revisi, setiap deadline, setiap malam yang terasa berat selalu berhasil dilalui. Terima kasih ya sudah berjuang sejauh ini, dan selamat menyandang gelar baru.";
+        let textIndex = 0;
+        function startTypingEffect() {
+            if (textIndex < letterText.length) {
+                typingLetter.innerHTML += letterText.charAt(textIndex);
+                textIndex++;
+                setTimeout(startTypingEffect, 40);
+            }
+        }
+
+        let giftOpened = false;
+        giftBoxContainer.addEventListener('click', () => {
+            if (!giftOpened) {
+                if (bgMusic) bgMusic.volume = 0.15;
+                giftIcon.innerHTML = '<i class="fas fa-box-open" style="color: var(--maroon-soft)"></i>';
+                giftIcon.classList.remove('animate-bounce');
+                surpriseMessage.classList.remove('hidden');
+                confetti({ particleCount: 150, spread: 80, colors: ['#7d1325', '#c94e62', '#f4c5ce', '#ffffff'] });
+                giftOpened = true;
+            }
+        });
+
+        vnPlayBtn.addEventListener('click', () => {
+            if (vnAudio.paused) {
+                vnAudio.play(); vnPlayIcon.className = "fas fa-pause";
+                if (bgMusic) bgMusic.volume = 0.08;
+            } else {
+                vnAudio.pause(); vnPlayIcon.className = "fas fa-play ml-0.5";
+                if (bgMusic) bgMusic.volume = 0.25;
+            }
+        });
+
+        vnAudio.addEventListener('loadedmetadata', () => { vnDuration.innerText = formatTime(vnAudio.duration); });
+        vnAudio.addEventListener('timeupdate', () => {
+            const pct = (vnAudio.currentTime / vnAudio.duration) * 100;
+            vnProgressJuice.style.width = `${pct}%`;
+            vnCurrentTime.innerText = formatTime(vnAudio.currentTime);
+        });
+        vnAudio.addEventListener('ended', () => {
+            vnPlayIcon.className = "fas fa-play ml-0.5";
+            vnProgressJuice.style.width = "0%";
+            vnCurrentTime.innerText = "0:00";
+            if (bgMusic) bgMusic.volume = 0.4;
+        });
+        vnProgressBar.addEventListener('click', (e) => {
+            const pct = e.offsetX / vnProgressBar.clientWidth;
+            vnAudio.currentTime = pct * vnAudio.duration;
+        });
+
+        function formatTime(s) {
+            if (isNaN(s)) return "0:00";
+            const m = Math.floor(s / 60), sec = Math.floor(s % 60);
+            return `${m}:${sec < 10 ? '0' : ''}${sec}`;
+        }
+
+        function triggerChatReply(option) {
+            const replyBtn1 = document.getElementById('replyBtn1');
+            const replyBtn2 = document.getElementById('replyBtn2');
+            let userText = option === 1 ? replyBtn1.innerText : replyBtn2.innerText;
+
+            chatWindow.innerHTML += `<div class="text-white p-3 rounded-2xl rounded-tr-none max-w-[80%] ml-auto text-right text-sm" style="background: var(--maroon-mid)">${userText}</div>`;
+            replyBtn1.style.display = 'none';
+            replyBtn2.style.display = 'none';
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            setTimeout(() => {
+                chatWindow.innerHTML += `<div class="p-3 rounded-2xl rounded-tl-none max-w-[80%] text-sm" style="background: rgba(158,26,47,0.45); color: #f4c5ce">Ternyata masanya sudah selesai yaa, tapi jangan pernah lupain hari-hari melewati proker dan agenda bareng itu ya kak 💙</div>`;
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }, 1200);
+        }
+
+        function openChibiModal() {
+            chibiModal.classList.remove('hidden');
+            setTimeout(() => {
+                chibiModal.classList.remove('opacity-0');
+                chibiModal.querySelector('div').classList.remove('scale-95');
+                chibiModal.querySelector('div').classList.add('scale-100');
+            }, 50);
+            confetti({ particleCount: 40, scalar: 1.2, angle: 60, spread: 55, origin: { x: 0.1, y: 0.8 }, colors: ['#7d1325', '#c94e62'] });
+            confetti({ particleCount: 40, scalar: 1.2, angle: 120, spread: 55, origin: { x: 0.9, y: 0.8 }, colors: ['#7d1325', '#c94e62'] });
+        }
+
+        function closeChibiModal() {
+            chibiModal.querySelector('div').classList.remove('scale-100');
+            chibiModal.querySelector('div').classList.add('scale-95');
+            chibiModal.classList.add('opacity-0');
+            setTimeout(() => { chibiModal.classList.add('hidden'); }, 300);
+        }
+
+        function createParticles() {
+            const icons = ['fa-graduation-cap', 'fa-star', 'fa-scroll', 'fa-award'];
+            for (let i = 0; i < 18; i++) {
+                const p = document.createElement('i');
+                p.className = `fas ${icons[Math.floor(Math.random() * icons.length)]} particle text-lg md:text-xl`;
+                p.style.color = `rgba(${Math.random() > 0.5 ? '158,26,47' : '201,78,98'},0.35)`;
+                p.style.left = `${Math.random() * 100}vw`;
+                p.style.animationDelay = `${Math.random() * 6}s`;
+                p.style.animationDuration = `${5 + Math.random() * 5}s`;
+                document.body.appendChild(p);
+            }
+        }
+
+        function replayExperience() { window.location.reload(); }
+
+        // ===== ENVELOPE =====
+        const envelopeMessages = [
+            "Hari yang berat tidak bertahan selamanya. Kamu lebih kuat dari yang kamu kira.",
+            "Tarik napas dalam-dalam. Ingatlah kalau rasa cemas itu wajar. Hari ini kamu sudah membuktikan semuanya pantas diperjuangkan.",
+            "Selamat! Jangan lupa rayakan dirimu. Kamu pantas mendapatkannya.",
+            "Kampus boleh ditinggalkan, tapi keilmuan jangan ya kakk! kalo kangen ramein aja grupnya. 💙"
+        ];
+        const envelopeOpened = [false, false, false, false];
+
+        function openEnvelope(wrapper, idx) {
+            if (envelopeOpened[idx]) {
+                envelopeOpened[idx] = false;
+                document.getElementById('flap-' + idx).classList.remove('opened');
+                document.getElementById('letter-' + idx).classList.remove('slide-up');
+                wrapper.querySelector('.env-icon').classList.remove('hide');
+                return;
+            }
+            envelopeOpened[idx] = true;
+            document.getElementById('ltext-' + idx).innerText = envelopeMessages[idx];
+            document.getElementById('flap-' + idx).classList.add('opened');
+            wrapper.querySelector('.env-icon').classList.add('hide');
+            setTimeout(() => { document.getElementById('letter-' + idx).classList.add('slide-up'); }, 180);
+            confetti({ particleCount: 25, spread: 50, origin: { y: 0.65 }, scalar: 0.7, colors: ['#7d1325', '#c94e62', '#f4c5ce'] });
+        }
+    </script>
+</body>
+</html>

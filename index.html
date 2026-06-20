@@ -14,16 +14,16 @@
     <style>
         /* ===== MAROON PALETTE (bouquet-inspired) ===== */
         :root {
-            --maroon-deep:   #5c0a14;  /* dark bouquet wrap */
-            --maroon-mid:    #7d1325;  /* main maroon */
-            --maroon-rich:   #9e1a2f;  /* accent maroon */
-            --maroon-soft:   #c94e62;  /* lighter rose */
-            --blush:         #f4c5ce;  /* soft pink from flowers */
-            --cream:         #fdf4f5;  /* background base */
-            --cream-warm:    #f9eaec;  /* cards */
-            --black-wrap:    #1a1a1a;  /* black wrap paper */
-            --ribbon:        #8b0d22;  /* ribbon red */
-            --gold:          #c9a07a;  /* buket string / accent */
+            --maroon-deep:   #5c0a14;
+            --maroon-mid:    #7d1325;
+            --maroon-rich:   #9e1a2f;
+            --maroon-soft:   #c94e62;
+            --blush:         #f4c5ce;
+            --cream:         #fdf4f5;
+            --cream-warm:    #f9eaec;
+            --black-wrap:    #1a1a1a;
+            --ribbon:        #8b0d22;
+            --gold:          #c9a07a;
             --text-dark:     #2a0509;
         }
 
@@ -47,7 +47,6 @@
         .glow-effect {
             box-shadow: 0 0 36px rgba(201, 78, 98, 0.25);
         }
-        /* Floating Animation */
         @keyframes float {
             0% { transform: translateY(0px) rotate(0deg); opacity: 0; }
             50% { opacity: 0.6; }
@@ -59,7 +58,6 @@
             animation: float 8s linear infinite;
             bottom: -50px;
         }
-        /* Shake Animation for Wrong PIN */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-8px); }
@@ -68,7 +66,6 @@
         .shake-effect {
             animation: shake 0.4s ease-in-out;
         }
-        /* PIN Dots active style */
         .pin-dot.active {
             background-color: var(--maroon-deep);
             transform: scale(1.2);
@@ -137,66 +134,195 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(158, 26, 47, 0.45); border-radius: 10px; }
 
-        /* ===== SCRAPBOOK ENVELOPE ===== */
+        /* ===== ENVELOPE CARDS ===== */
         .envelope-wrapper {
-            cursor: pointer; display: flex; flex-direction: column;
-            align-items: center; gap: 14px; width: 170px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            width: 160px;
+            transition: transform 0.2s ease;
         }
-        .envelope-box { position: relative; width: 150px; height: 120px; }
+        .envelope-wrapper:hover { transform: translateY(-4px); }
 
-        .env-body {
-            position: absolute; bottom: 0; width: 150px; height: 100px;
-            background: var(--maroon-mid); border-radius: 6px; overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15), inset 0 -8px 12px rgba(0,0,0,0.07);
-            transition: all 0.35s ease;
+        .env-card {
+            width: 150px;
+            height: 110px;
+            position: relative;
+            border-radius: 4px 4px 6px 6px;
+            background: var(--maroon-mid);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            overflow: hidden;
+            transition: box-shadow 0.3s ease;
         }
-        .envelope-wrapper:hover .env-body { transform: translateY(-3px); }
+        .envelope-wrapper:hover .env-card {
+            box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+        }
 
-        .env-bottom-left {
-            position: absolute; bottom: 0; left: 0; width: 0; height: 0;
-            border-style: solid; border-width: 0 0 60px 75px;
-            border-color: transparent transparent var(--maroon-deep) transparent;
+        .env-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 0; height: 0;
+            border-left: 75px solid transparent;
+            border-right: 75px solid transparent;
+            border-top: 55px solid var(--maroon-rich);
+            z-index: 2;
+            transition: transform 0.5s ease;
+            transform-origin: top center;
         }
-        .env-bottom-right {
-            position: absolute; bottom: 0; right: 0; width: 0; height: 0;
-            border-style: solid; border-width: 0 75px 60px 0;
-            border-color: transparent var(--maroon-deep) transparent transparent;
+        .envelope-wrapper.opened .env-card::before {
+            transform: rotateX(180deg);
         }
-        .env-flap {
-            position: absolute; top: 0; left: 0; width: 0; height: 0;
-            border-style: solid; border-width: 55px 75px 0 75px;
-            border-color: var(--maroon-rich) transparent transparent transparent;
-            transform-origin: top center; transition: transform 0.6s ease; z-index: 4;
-        }
-        .env-flap.opened { transform: rotateX(180deg); }
 
-        .env-letter {
-            position: absolute; left: 50%; bottom: 10px;
-            transform: translateX(-50%);
-            width: 130px; height: 85px;
-            background: var(--cream-warm);
-            border: 1px solid rgba(158, 26, 47, 0.2);
-            border-radius: 6px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.12);
-            z-index: 2; opacity: 0;
-            transition: all 0.65s cubic-bezier(.34,1.56,.64,1);
-            display: flex; justify-content: center; align-items: center; padding: 12px;
+        .env-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 0;
+            border-left: 75px solid var(--maroon-deep);
+            border-right: 75px solid var(--maroon-deep);
+            border-top: 55px solid transparent;
+            z-index: 1;
         }
-        .env-letter::before {
-            content: ""; position: absolute; inset: 0;
-            background: repeating-linear-gradient(0deg, transparent, transparent 22px, rgba(0,0,0,0.03) 23px);
-            pointer-events: none;
-        }
-        .env-letter.slide-up { transform: translateX(-50%) translateY(-45px); opacity: 1; }
-        .letter-inner { text-align: center; }
-        .letter-heart { font-size: 18px; margin-bottom: 4px; }
-        .letter-text { font-size: 10px; color: var(--maroon-deep); line-height: 1.6; font-style: italic; }
+
         .env-icon {
-            position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%);
-            color: var(--blush); font-size: 22px; z-index: 3; transition: opacity 0.3s;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(244,197,206,0.7);
+            font-size: 22px;
+            z-index: 3;
+            transition: opacity 0.3s;
         }
-        .env-icon.hide { opacity: 0; }
-        .env-label { font-size: 12px; font-weight: 600; color: #f4c5ce; letter-spacing: 0.5px; }
+        .envelope-wrapper.opened .env-icon { opacity: 0; }
+
+        .env-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #f4c5ce;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        /* ===== LETTER MODAL for envelope ===== */
+        .env-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 60;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .env-modal-overlay.show {
+            display: flex;
+        }
+
+        /* Surat pop-up style */
+        .env-letter-box {
+            background: #fef9f0;
+            border-radius: 4px;
+            max-width: 380px;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+            animation: letterUnfold 0.45s cubic-bezier(.34,1.3,.64,1);
+            overflow: hidden;
+        }
+        @keyframes letterUnfold {
+            from { transform: scale(0.7) translateY(40px); opacity: 0; }
+            to   { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        /* Top decorative border */
+        .env-letter-topbar {
+            height: 8px;
+            background: linear-gradient(90deg, var(--maroon-deep), var(--maroon-soft), var(--maroon-deep));
+        }
+
+        .env-letter-inner {
+            padding: 28px 28px 24px;
+        }
+
+        .env-letter-emoji {
+            font-size: 36px;
+            display: block;
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .env-letter-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            color: var(--maroon-deep);
+            text-align: center;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        /* Lined paper effect */
+        .env-letter-paper {
+            background:
+                repeating-linear-gradient(
+                    transparent,
+                    transparent 27px,
+                    rgba(158,26,47,0.12) 27px,
+                    rgba(158,26,47,0.12) 28px
+                );
+            background-color: #fffdf5;
+            border: 1px solid rgba(158,26,47,0.15);
+            border-radius: 2px;
+            padding: 16px 18px;
+            min-height: 100px;
+        }
+
+        .env-letter-text {
+            font-size: 14px;
+            line-height: 28px; /* match the lined background */
+            color: var(--maroon-deep);
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        .env-letter-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 16px;
+        }
+
+        .env-letter-close {
+            background: var(--maroon-mid);
+            color: white;
+            border: none;
+            padding: 9px 26px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .env-letter-close:hover { background: var(--maroon-rich); }
+
+        /* Wax seal deco */
+        .env-wax-seal {
+            width: 44px;
+            height: 44px;
+            background: var(--maroon-mid);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f4c5ce;
+            font-size: 18px;
+            margin: 0 auto 16px;
+            box-shadow: 0 2px 8px rgba(125,19,37,0.35);
+            border: 3px solid rgba(201,78,98,0.35);
+        }
 
         /* ===== BUTTON STYLES ===== */
         .btn-maroon {
@@ -205,13 +331,84 @@
         }
         .btn-maroon:hover { background: var(--maroon-rich); }
 
-        /* PIN Button style */
         .pin-btn {
             background: rgba(80, 5, 18, 0.5);
             border: 1px solid rgba(244, 197, 206, 0.2);
             color: #f9e8eb;
         }
         .pin-btn:hover { background: rgba(158, 26, 47, 0.6); }
+
+        /* ===== GALLERY LAYOUT ===== */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 32px;
+            align-items: center;
+            justify-items: center;
+        }
+        @media (max-width: 640px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .photo-card-landscape {
+            background: white;
+            padding: 14px;
+            padding-bottom: 40px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+            border-radius: 2px;
+            width: 100%;
+            max-width: 280px;
+            border-top: 3px solid var(--maroon-soft);
+        }
+        .photo-card-landscape:first-child {
+            transform: rotate(-3deg);
+            border-top-color: var(--maroon-soft);
+        }
+        .photo-card-landscape:first-child:hover {
+            transform: rotate(0deg) scale(1.04);
+        }
+        .photo-card-landscape:last-child {
+            transform: rotate(2deg);
+            border-top-color: var(--maroon-deep);
+        }
+        .photo-card-landscape:last-child:hover {
+            transform: rotate(0deg) scale(1.04);
+        }
+        .photo-card-landscape { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .photo-card-landscape:hover { box-shadow: 0 14px 32px rgba(0,0,0,0.25); }
+
+        .photo-img-landscape {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: #e0c8cc;
+            display: block;
+        }
+        /* Square card for center */
+        .photo-card-square {
+            background: white;
+            padding: 14px;
+            padding-bottom: 40px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+            border-radius: 2px;
+            width: 100%;
+            max-width: 260px;
+            border-top: 3px solid var(--maroon-mid);
+            transform: rotate(-1deg);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .photo-card-square:hover {
+            transform: rotate(0deg) scale(1.04);
+            box-shadow: 0 14px 32px rgba(0,0,0,0.25);
+        }
+        .photo-img-square {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            background: #e0c8cc;
+            display: block;
+        }
     </style>
 </head>
 <body class="text-gray-800 antialiased min-h-screen flex flex-col justify-between">
@@ -318,6 +515,7 @@
                 <h2 class="text-2xl font-bold mb-2" style="color: #f9e8eb">Hari Kelulusanmu</h2>
                 <p class="text-sm mb-6" style="color: rgba(249,232,235,0.65)">Hari penting yang akan selalu dikenang:</p>
                 <div class="max-w-md mx-auto p-6 rounded-2xl shadow-inner border" style="background: rgba(60,0,15,0.5); border-color: rgba(244,197,206,0.15)">
+                    <!-- PERUBAHAN 1: tanggal diganti 20 Juni 2026 -->
                     <div class="font-aesthetic text-4xl md:text-5xl mb-2" style="color: #f4c5ce">20 Juni 2026</div>
                     <p class="text-sm italic mt-2" style="color: rgba(249,232,235,0.55)">"Sejak hari itu, satu perjalanan besar resmi tuntas dan babak baru pun dimulai."</p>
                 </div>
@@ -370,27 +568,26 @@
             </div>
         </section>
 
-        <!-- Photo Gallery -->
+        <!-- Photo Gallery — PERUBAHAN 4: layout landscape-square-landscape -->
         <section class="py-16 px-4 max-w-5xl mx-auto">
             <h2 class="text-center text-3xl font-bold mb-10" style="color: #f9e8eb">Kenangan Perjuangan Kita ✨</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-items-center">
-                <div class="bg-white p-4 pb-10 shadow-xl rounded-sm transform -rotate-3 hover:rotate-0 hover:scale-105 transition duration-300 max-w-[260px]" style="border-top: 3px solid var(--maroon-soft)">
-                    <div class="w-full h-48 bg-gray-200 overflow-hidden mb-4 rounded-sm">
-                        <img src="foto_1.jpeg" alt="Memory 1" class="w-full h-full object-cover">
-                    </div>
-                    <p class="font-aesthetic text-xl text-center text-gray-700"></p>
+            <div class="gallery-grid">
+                <!-- Kiri: foto landscape -->
+                <div class="photo-card-landscape">
+                    <img src="foto_1.jpeg" alt="Memory 1" class="photo-img-landscape">
+                    <p class="font-aesthetic text-lg text-center text-gray-600 mt-3"></p>
                 </div>
-                <div class="bg-white p-4 pb-10 shadow-xl rounded-sm transform rotate-2 hover:rotate-0 hover:scale-105 transition duration-300 max-w-[260px]" style="border-top: 3px solid var(--maroon-mid)">
-                    <div class="w-full h-48 bg-gray-200 overflow-hidden mb-4 rounded-sm">
-                        <img src="foto_2.jpeg" alt="Memory 2" class="w-full h-full object-cover">
-                    </div>
-                    <p class="font-aesthetic text-xl text-center text-gray-700"></p>
+
+                <!-- Tengah: foto 1:1 (square) -->
+                <div class="photo-card-square">
+                    <img src="foto_2.jpeg" alt="Memory 2" class="photo-img-square">
+                    <p class="font-aesthetic text-lg text-center text-gray-600 mt-3"></p>
                 </div>
-                <div class="bg-white p-4 pb-10 shadow-xl rounded-sm transform -rotate-1 hover:rotate-0 hover:scale-105 transition duration-300 max-w-[260px]" style="border-top: 3px solid var(--maroon-deep)">
-                    <div class="w-full h-48 bg-gray-200 overflow-hidden mb-4 rounded-sm">
-                        <img src="foto_3.jpeg" alt="Memory 3" class="w-full h-full object-cover">
-                    </div>
-                    <p class="font-aesthetic text-xl text-center text-gray-700"></p>
+
+                <!-- Kanan: foto landscape -->
+                <div class="photo-card-landscape" style="border-top-color: var(--maroon-deep)">
+                    <img src="foto_3.jpeg" alt="Memory 3" class="photo-img-landscape">
+                    <p class="font-aesthetic text-lg text-center text-gray-600 mt-3"></p>
                 </div>
             </div>
         </section>
@@ -399,11 +596,12 @@
         <section class="py-16 px-4 max-w-xl mx-auto">
             <div class="glass p-6 rounded-3xl shadow-xl flex flex-col h-[400px] justify-between">
                 <div class="border-b pb-3 flex items-center gap-3" style="border-color: rgba(201,78,98,0.2)">
-                    <div class="w-3 h-3 rounded-full animate-pulse" style="background: #22c55e"></div>
-                    <p class="text-xs font-semibold text-gray-600">Interactive Flashback Chat</p>
+                    <!-- PERUBAHAN 2: dot merah terang (bukan hijau) -->
+                    <div class="w-3 h-3 rounded-full animate-pulse" style="background: #e53e3e;"></div>
+                    <p class="text-xs font-semibold" style="color: rgba(249,232,235,0.7)">Interactive Flashback Chat</p>
                 </div>
                 <div id="chatWindow" class="flex-1 overflow-y-auto py-4 space-y-3 pr-2 text-xs md:text-sm">
-                    <div class="p-3 rounded-2xl rounded-tl-none max-w-[80%] text-sm" style="background: rgba(158,26,47,0.45); color: #f4c5ce">
+                    <div class="p-3 rounded-2xl rounded-tl-none max-w-[80%] w-fit text-sm" style="background: rgba(158,26,47,0.45); color: #f4c5ce">
                         Kak inget ga sii waktu demisioner duluu ada yang nangis kejer bangett? 😂
                     </div>
                 </div>
@@ -415,85 +613,43 @@
 
             <div class="text-center mt-10">
                 <button onclick="openChibiModal()" class="glass px-6 py-3 rounded-full text-xs font-bold tracking-wider hover:scale-105 transition-all duration-300 shadow-md cursor-pointer border" style="color: #f4c5ce; border-color: rgba(244,197,206,0.2)">
-                    <i class="fas fa-graduation-cap mr-2 animate-bounce"></i> Buka Kado Lucu Ini Paw! 🐾
+                    <i class="fas fa-graduation-cap mr-2 animate-bounce"></i> Buka Kado Lucu Ini! 
+                    <!-- PERUBAHAN 2: emoji merah -->
+                    🎓
                 </button>
             </div>
         </section>
 
-        <!-- Kapsul Waktu -->
+        <!-- Kapsul Waktu — PERUBAHAN 5: label & isi amplop diperbarui -->
         <section class="py-16 px-4 max-w-4xl mx-auto text-center">
             <h2 class="text-2xl font-bold mb-2" style="color: #f9e8eb">Kapsul Waktu: "Buka Saat Kamu..."</h2>
-            <p class="text-xs mb-8" style="color: rgba(249,232,235,0.55)">Ketuk amplop sesuai perasaanmu sekarang 🎓</p>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 justify-items-center">
+            <p class="text-xs mb-10" style="color: rgba(249,232,235,0.55)">Ketuk amplop sesuai perasaanmu sekarang 🎓</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 justify-items-center">
 
-                <div class="envelope-wrapper" onclick="openEnvelope(this, 0)">
-                    <div class="envelope-box">
-                        <div class="env-body">
-                            <div class="env-flap" id="flap-0"></div>
-                            <div class="env-bottom-left"></div>
-                            <div class="env-bottom-right"></div>
-                            <div class="env-icon"><i class="fas fa-cloud-rain"></i></div>
-                        </div>
-                        <div class="env-letter" id="letter-0">
-                            <div class="letter-inner">
-                                <div class="letter-heart">🎓</div>
-                                <p class="letter-text" id="ltext-0"></p>
-                            </div>
-                        </div>
+                <div class="envelope-wrapper" onclick="openEnvelope(0)">
+                    <div class="env-card">
+                        <div class="env-icon"><i class="fas fa-cloud-rain"></i></div>
                     </div>
-                    <p class="env-label">Cemas / Lelah</p>
+                    <p class="env-label">Sedih</p>
                 </div>
 
-                <div class="envelope-wrapper" onclick="openEnvelope(this, 1)">
-                    <div class="envelope-box">
-                        <div class="env-body">
-                            <div class="env-flap" id="flap-1"></div>
-                            <div class="env-bottom-left"></div>
-                            <div class="env-bottom-right"></div>
-                            <div class="env-icon"><i class="fas fa-brain"></i></div>
-                        </div>
-                        <div class="env-letter" id="letter-1">
-                            <div class="letter-inner">
-                                <div class="letter-heart">🎓</div>
-                                <p class="letter-text" id="ltext-1"></p>
-                            </div>
-                        </div>
+                <div class="envelope-wrapper" onclick="openEnvelope(1)">
+                    <div class="env-card">
+                        <div class="env-icon"><i class="fas fa-brain"></i></div>
                     </div>
-                    <p class="env-label">Bingung Masa Depan</p>
+                    <p class="env-label">Overthinking</p>
                 </div>
 
-                <div class="envelope-wrapper" onclick="openEnvelope(this, 2)">
-                    <div class="envelope-box">
-                        <div class="env-body">
-                            <div class="env-flap" id="flap-2"></div>
-                            <div class="env-bottom-left"></div>
-                            <div class="env-bottom-right"></div>
-                            <div class="env-icon"><i class="fas fa-sun"></i></div>
-                        </div>
-                        <div class="env-letter" id="letter-2">
-                            <div class="letter-inner">
-                                <div class="letter-heart">🎓</div>
-                                <p class="letter-text" id="ltext-2"></p>
-                            </div>
-                        </div>
+                <div class="envelope-wrapper" onclick="openEnvelope(2)">
+                    <div class="env-card">
+                        <div class="env-icon"><i class="fas fa-sun"></i></div>
                     </div>
-                    <p class="env-label">Bangga & Lega</p>
+                    <p class="env-label">Bahagia</p>
                 </div>
 
-                <div class="envelope-wrapper" onclick="openEnvelope(this, 3)">
-                    <div class="envelope-box">
-                        <div class="env-body">
-                            <div class="env-flap" id="flap-3"></div>
-                            <div class="env-bottom-left"></div>
-                            <div class="env-bottom-right"></div>
-                            <div class="env-icon"><i class="fas fa-graduation-cap"></i></div>
-                        </div>
-                        <div class="env-letter" id="letter-3">
-                            <div class="letter-inner">
-                                <div class="letter-heart">🎓</div>
-                                <p class="letter-text" id="ltext-3"></p>
-                            </div>
-                        </div>
+                <div class="envelope-wrapper" onclick="openEnvelope(3)">
+                    <div class="env-card">
+                        <div class="env-icon"><i class="fas fa-graduation-cap"></i></div>
                     </div>
                     <p class="env-label">Kangen Keilmuan</p>
                 </div>
@@ -501,11 +657,32 @@
             </div>
         </section>
 
+        <!-- Envelope Letter Modal — pop-up surat -->
+        <div class="env-modal-overlay" id="envModal" onclick="closeEnvModal(event)">
+            <div class="env-letter-box">
+                <div class="env-letter-topbar"></div>
+                <div class="env-letter-inner">
+                    <div class="env-wax-seal" id="envModalIcon">
+                        <i class="fas fa-envelope-open-text"></i>
+                    </div>
+                    <div class="env-letter-emoji" id="envModalEmoji">🎓</div>
+                    <div class="env-letter-title" id="envModalTitle">Untuk Kakak...</div>
+                    <div class="env-letter-paper">
+                        <p class="env-letter-text" id="envModalText"></p>
+                    </div>
+                    <div class="env-letter-footer">
+                        <button class="env-letter-close" onclick="closeEnvModalDirect()">Tutup ✕</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Closing -->
         <section class="py-20 px-4 text-center">
             <h2 class="font-aesthetic text-4xl md:text-5xl mb-4" style="color: #f4c5ce">Selamat atas kelulusanmu, sebuah awal baru menanti.</h2>
             <p class="text-xs mb-8" style="color: rgba(249,232,235,0.55)">Terima kasih telah menjadi bagian dari cerita ini. Sampai bertemu di perjalanan hebat berikutnya.</p>
-            <button onclick="replayExperience()" class="glass px-6 py-2 rounded-full text-xs font-semibold text-gray-700 hover:bg-white transition cursor-pointer">
+            <!-- PERUBAHAN 3: warna teks putih -->
+            <button onclick="replayExperience()" class="glass px-6 py-2 rounded-full text-xs font-semibold hover:bg-white/10 transition cursor-pointer" style="color: #ffffff;">
                 <i class="fas fa-rotate-left mr-2"></i> Putar Kembali Pengalaman
             </button>
         </section>
@@ -578,7 +755,7 @@
 
     <script>
         // ================= CONFIG =================
-        const CORRECT_PIN = '200526';
+        const CORRECT_PIN = '200626'; // PERUBAHAN 1: PIN 200626
         // ==========================================
 
         let currentPin = "";
@@ -750,13 +927,13 @@
             const replyBtn2 = document.getElementById('replyBtn2');
             let userText = option === 1 ? replyBtn1.innerText : replyBtn2.innerText;
 
-            chatWindow.innerHTML += `<div class="text-white p-3 rounded-2xl rounded-tr-none max-w-[80%] ml-auto text-right text-sm" style="background: var(--maroon-mid)">${userText}</div>`;
+            chatWindow.innerHTML += `<div class="text-white p-3 rounded-2xl rounded-tr-none max-w-[80%] w-fit ml-auto text-right text-sm" style="background: var(--maroon-mid)">${userText}</div>`;
             replyBtn1.style.display = 'none';
             replyBtn2.style.display = 'none';
             chatWindow.scrollTop = chatWindow.scrollHeight;
 
             setTimeout(() => {
-                chatWindow.innerHTML += `<div class="p-3 rounded-2xl rounded-tl-none max-w-[80%] text-sm" style="background: rgba(158,26,47,0.45); color: #f4c5ce">Ternyata masanya sudah selesai yaa, tapi jangan pernah lupain hari-hari melewati proker dan agenda bareng itu ya kak 💙</div>`;
+                chatWindow.innerHTML += `<div class="p-3 rounded-2xl rounded-tl-none max-w-[80%] w-fit text-sm" style="background: rgba(158,26,47,0.45); color: #f4c5ce">Ternyata masanya sudah selesai yaa, tapi jangan pernah lupain hari-hari melewati proker dan agenda bareng itu ya kak ❤️</div>`;
                 chatWindow.scrollTop = chatWindow.scrollHeight;
             }, 1200);
         }
@@ -794,29 +971,50 @@
 
         function replayExperience() { window.location.reload(); }
 
-        // ===== ENVELOPE =====
+        // ===== ENVELOPE — PERUBAHAN 5: label & isi diperbarui =====
         const envelopeMessages = [
-            "Hari yang berat tidak bertahan selamanya. Kamu lebih kuat dari yang kamu kira.",
-            "Tarik napas dalam-dalam. Ingatlah kalau rasa cemas itu wajar. Hari ini kamu sudah membuktikan semuanya pantas diperjuangkan.",
-            "Selamat! Jangan lupa rayakan dirimu. Kamu pantas mendapatkannya.",
-            "Kampus boleh ditinggalkan, tapi keilmuan jangan ya kakk! kalo kangen ramein aja grupnya. 💙"
-        ];
-        const envelopeOpened = [false, false, false, false];
-
-        function openEnvelope(wrapper, idx) {
-            if (envelopeOpened[idx]) {
-                envelopeOpened[idx] = false;
-                document.getElementById('flap-' + idx).classList.remove('opened');
-                document.getElementById('letter-' + idx).classList.remove('slide-up');
-                wrapper.querySelector('.env-icon').classList.remove('hide');
-                return;
+            {
+                emoji: "",
+                title: "Kapsul Sedih",
+                text: "Hari yang berat tidak bertahan selamanya. Kamu lebih kuat dari yang kamu kira."
+            },
+            {
+                emoji: "",
+                title: "Kapsul Overthinking",
+                text: "Tarik napas dalam-dalam. Ingatlah kalau rasa cemas itu wajar. Hari ini kamu sudah membuktikan semuanya pantas diperjuangkan."
+            },
+            {
+                emoji: "",
+                title: "Kapsul Bahagia",
+                text: "Selamat! Jangan lupa rayakan dirimu. Kamu pantas mendapatkannya."
+            },
+            {
+                emoji: "",
+                title: "Kapsul Kangen Keilmuan",
+                text: "Kampus boleh ditinggalkan, tapi keilmuan jangan ya kakk! Kalo kangen ramein aja grupnya."
             }
-            envelopeOpened[idx] = true;
-            document.getElementById('ltext-' + idx).innerText = envelopeMessages[idx];
-            document.getElementById('flap-' + idx).classList.add('opened');
-            wrapper.querySelector('.env-icon').classList.add('hide');
-            setTimeout(() => { document.getElementById('letter-' + idx).classList.add('slide-up'); }, 180);
-            confetti({ particleCount: 25, spread: 50, origin: { y: 0.65 }, scalar: 0.7, colors: ['#7d1325', '#c94e62', '#f4c5ce'] });
+        ];
+
+        function openEnvelope(idx) {
+            const wrappers = document.querySelectorAll('.envelope-wrapper');
+            wrappers[idx].classList.add('opened');
+
+            document.getElementById('envModalEmoji').innerText = envelopeMessages[idx].emoji;
+            document.getElementById('envModalTitle').innerText = envelopeMessages[idx].title;
+            document.getElementById('envModalText').innerText = envelopeMessages[idx].text;
+            document.getElementById('envModal').classList.add('show');
+
+            confetti({ particleCount: 30, spread: 50, origin: { y: 0.65 }, scalar: 0.8, colors: ['#7d1325', '#c94e62', '#f4c5ce'] });
+        }
+
+        function closeEnvModal(e) {
+            // hanya tutup kalau klik overlay (bukan isi modal)
+            if (e && !e.target.classList.contains('env-modal-overlay')) return;
+            document.getElementById('envModal').classList.remove('show');
+        }
+
+        function closeEnvModalDirect() {
+            document.getElementById('envModal').classList.remove('show');
         }
     </script>
 </body>
